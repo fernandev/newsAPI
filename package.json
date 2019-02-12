@@ -12,5 +12,8 @@
 	},
 	"author": "fernandev",
 	"license": "ISC",
-	"homepage": "https://bitbucket.org/mfernandev/newsapi#readme"
+	"homepage": "https://bitbucket.org/mfernandev/newsapi#readme",
+	"dependencies": {
+		"express": "^4.16.4"
+	}
 }
