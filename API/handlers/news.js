@@ -68,7 +68,7 @@ class News {
 		});
 	}
 
-	findArticleById (req, res, next) {
+	findById (req, res, next) {
 		req.getValidationResult().then(
 			newsValidator.handler()
 		).then(() => {

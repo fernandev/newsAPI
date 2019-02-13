@@ -7,6 +7,6 @@ const News = new NewsHandler();
 const router = express.Router();
 
 router.get('/', newsValidator.validate('listAllArticles'), News.listAllArticles.bind(News));
-router.get('/:id', newsValidator.validate('filterArticleById'), News.findArticleById.bind(News));
+router.get('/:id', newsValidator.validate('findById'), News.findById.bind(News));
 
 module.exports = router;
