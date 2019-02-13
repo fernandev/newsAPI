@@ -2,6 +2,7 @@ const mysql = require('mysql');
 
 const database = require('../../util/database');
 const newsValidator = require('../validators/news');
+const ErrorHandler = require('./error');
 
 const PaginationUtil = require('../../util/pagination');
 
