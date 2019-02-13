@@ -1,6 +1,8 @@
 const mysql = require('mysql');
 
 const database = require('../../util/database');
+const newsValidator = require('../validators/news');
+
 const PaginationUtil = require('../../util/pagination');
 
 const Pagination = new PaginationUtil('http://localhost:8000/news', 8);// FIXME: Hardcoded path.
@@ -28,22 +30,30 @@ class News {
 	}
 
 	listAllArticles (req, res, next) {
-		const { page } = req.query;
-		const currentPage = Number.parseInt(page, 10) || 1;
+		req.getValidationResult().then(
+			newsValidator.handler()
+		).then(() => {
+			this.getArticlesCount().then(recordsCount => {
+				const { page } = req.query;
+				const currentPage = Number.parseInt(page, 10) || 1;
+				const queryOffset = Pagination.getOffset(currentPage);
 
-		this.getArticlesCount().then(recordsCount => {
-			const queryOffset = Pagination.getOffset(currentPage);
-			this.getArticles(queryOffset).then(databaseData => {
-				const queryResults = databaseData[0];
-				res.status(200).json({
-					count: queryResults.length,
-					links: Pagination.getPaginationInformation(recordsCount, currentPage),
-					results: queryResults
+				this.getArticles(queryOffset).then(databaseData => {
+					const queryResults = databaseData[0];
+					res.status(200).json({
+						count: queryResults.length,
+						links: Pagination.getPaginationInformation(recordsCount, currentPage),
+						results: queryResults
+					});
+				});
+			}).catch(() => {
+				res.status(503).json({
+					message: 'There was an error processing this request. Please, try again later.'
 				});
 			});
-		}).catch(() => {
-			res.status(503).json({
-				message: 'There was an error processing that request. Please, try again later.'
+		}).catch(error => {
+			res.status(400).json({
+				message: error.message
 			});
 		});
 	}
