@@ -1,6 +1,6 @@
 DELIMITER $
 
-CREATE PROCEDURE retrieve_articles (
+CREATE PROCEDURE retrieve_all_articles (
 	IN queryOffset TINYINT
 ,	IN queryLimit TINYINT
 ) BEGIN
