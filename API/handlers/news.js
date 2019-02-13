@@ -20,9 +20,9 @@ class News {
 		return recordsQuery[0].recordsCount;
 	}
 
-	async getArticles (offset, limit) {
+	async getAllArticles (offset, limit) {
 		const preparedStatement = mysql.format(
-			'CALL retrieve_articles(?, ?)'
+			'CALL retrieve_all_articles(?, ?)'
 			, [offset, limit]
 		);
 
@@ -38,7 +38,7 @@ class News {
 				const currentPage = Number.parseInt(page, 10) || 1;
 				const queryOffset = Pagination.getOffset(currentPage);
 
-				this.getArticles(queryOffset).then(databaseData => {
+				this.getAllArticles(queryOffset).then(databaseData => {
 					const queryResults = databaseData[0];
 					res.status(200).json({
 						count: queryResults.length,
