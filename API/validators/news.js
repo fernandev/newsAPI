@@ -1,11 +1,16 @@
 const expressValidator = require('express-validator/check');
 
 exports.validate = (method) => {
-	if (method === 'listAllArticles') {
-		return [
+	const validatorsBySearchMethod = {
+		listAllArticles: [
 			expressValidator.query('page').optional().isInt({ gt: 0 })
-		];
-	}
+		],
+		findById: [
+			expressValidator.param('id').isInt({ gt: 0 })
+		]
+	};
+
+	return validatorsBySearchMethod[method];
 };
 
 exports.handler = next => result => {
