@@ -30,6 +30,15 @@ class News {
 		return database.query(preparedStatement);
 	}
 
+	async getArticleById (articleId) {
+		const preparedStatement = mysql.format(
+			'CALL retrieve_article(?)'
+			, [articleId]
+		);
+
+		return database.query(preparedStatement);
+	}
+
 	listAllArticles (req, res, next) {
 		req.getValidationResult().then(
 			newsValidator.handler()
@@ -50,6 +59,41 @@ class News {
 			}).catch(() => {
 				res.status(503).json({
 					message: 'There was an error processing this request. Please, try again later.'
+				});
+			});
+		}).catch(error => {
+			res.status(400).json({
+				message: error.message
+			});
+		});
+	}
+
+	findById (req, res, next) {
+		req.getValidationResult().then(
+			newsValidator.handler()
+		).then(() => {
+			const { id } = req.params;
+			const articleId = Number.parseInt(id, 10);
+
+			this.getArticleById(articleId).then(databaseData => {
+				const queryResults = databaseData[0];
+				if (queryResults.length === 0) {
+					throw ErrorHandler.createError({
+						status: 404,
+						message: 'None of the articles matches the criteria.'
+					});
+				} else if (queryResults.length > 1) {
+					throw ErrorHandler.createError({
+						status: 409,
+						message: 'Multiple articles were found matching this criteria. A database administrator should be contacted.'
+					});
+				}
+				res.status(200).json(
+					queryResults[0]
+				);
+			}).catch(error => {
+				res.status(error.status).json({
+					message: error.message
 				});
 			});
 		}).catch(error => {
