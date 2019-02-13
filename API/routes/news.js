@@ -1,10 +1,10 @@
 const express = require('express');
+const NewsHandler = require('../handlers/news');
+
+const News = new NewsHandler();
+
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-	res.status(200).json({
-		message: 'You reached the News resource!'
-	});
-});
+router.get('/', News.listAllArticles.bind(News));
 
 module.exports = router;
