@@ -5,7 +5,7 @@ exports.validate = (method) => {
 		listAllArticles: [
 			expressValidator.query('page').optional().isInt({ gt: 0 })
 		],
-		findById: [
+		filterArticleById: [
 			expressValidator.param('id').isInt({ gt: 0 })
 		]
 	};
