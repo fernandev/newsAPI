@@ -39,6 +39,15 @@ class News {
 		return database.query(preparedStatement);
 	}
 
+	async computeLike (articleId) {
+		const preparedStatement = mysql.format(
+			'CALL compute_article_likes(?)'
+			, [articleId]
+		);
+
+		return database.query(preparedStatement);
+	}
+
 	listAllArticles (req, res, next) {
 		req.getValidationResult().then(
 			newsValidator.handler()
@@ -91,6 +100,44 @@ class News {
 				res.status(200).json(
 					queryResults[0]
 				);
+			}).catch(error => {
+				res.status(error.status).json({
+					message: error.message
+				});
+			});
+		}).catch(error => {
+			res.status(400).json({
+				message: error.message
+			});
+		});
+	}
+
+	computeArticleLikes (req, res, next) {
+		req.getValidationResult().then(
+			newsValidator.handler()
+		).then(() => {
+			const { id } = req.params;
+			const articleId = Number.parseInt(id, 10);
+
+			this.computeLike(articleId).then(databaseData => {
+				const { affectedRows } = {
+					...{ affectedRows: 0 },
+					...databaseData
+				};
+
+				if (affectedRows === 0) {
+					throw ErrorHandler.createError({
+						status: 404,
+						message: 'None of the articles matches the criteria.'
+					});
+				} else if (affectedRows > 1) {
+					throw ErrorHandler.createError({
+						status: 409,
+						message: 'Multiple articles were affected. A database administrator should be contacted.'
+					});
+				}
+
+				res.status(204).json();
 			}).catch(error => {
 				res.status(error.status).json({
 					message: error.message
