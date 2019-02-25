@@ -1,6 +1,7 @@
 const express = require('express');
 const expressValidator = require('express-validator');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const newsRoutes = require('./API/routes/news');
 const ErrorHandler = require('./API/handlers/error');
@@ -8,6 +9,7 @@ const ErrorHandler = require('./API/handlers/error');
 const app = express();
 app.use(expressValidator());
 app.use(morgan('dev'));
+app.use(cors());
 
 app.use('/news', newsRoutes);
 
