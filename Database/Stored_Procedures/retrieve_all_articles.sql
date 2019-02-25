@@ -9,6 +9,7 @@ CREATE PROCEDURE retrieve_all_articles (
 
 	SELECT *
 	FROM articles
+	ORDER BY id
 		LIMIT queryLimit
 		OFFSET queryOffset;
 END$
