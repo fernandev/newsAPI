@@ -1,6 +1,6 @@
 DELIMITER $
 
-CREATE PROCEDURE retrieve_all_articles (
+CREATE PROCEDURE retrieve_latest_articles (
 	IN queryOffset TINYINT
 ,	IN queryLimit TINYINT
 ) BEGIN
@@ -9,7 +9,7 @@ CREATE PROCEDURE retrieve_all_articles (
 
 	SELECT *
 	FROM articles
-	ORDER BY id
+	ORDER BY created_at DESC
 		LIMIT queryLimit
 		OFFSET queryOffset;
 END$
