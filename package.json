@@ -4,7 +4,8 @@
 	"description": "A news-related API.",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "nodemon index.js"
 	},
 	"repository": {
 		"type": "git",
@@ -14,9 +15,12 @@
 	"license": "ISC",
 	"homepage": "https://bitbucket.org/mfernandev/newsapi#readme",
 	"dependencies": {
+		"cors": "^2.8.5",
 		"express": "^4.16.4",
 		"express-validator": "^5.3.1",
-		"mysql": "^2.16.0"
+		"morgan": "^1.9.1",
+		"mysql": "^2.16.0",
+		"nodemon": "^1.18.10"
 	},
 	"devDependencies": {
 		"eslint": "^5.13.0",
